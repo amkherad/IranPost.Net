@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IranPost.Net", "src\IranPost.Net\IranPost.Net.csproj", "{1DF70094-75A9-4F6E-AE8B-67DC6A24BBB0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IranPost.Net.AspNet", "src\IranPost.Net.AspNet\IranPost.Net.AspNet.csproj", "{7B56509A-BA25-494E-88D3-F8F790CBB361}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IranPost.Net.JsonNet", "src\IranPost.Net.JsonNet\IranPost.Net.JsonNet.csproj", "{6D1B6DBA-7E40-4A80-9051-224E33F9AE01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1DF70094-75A9-4F6E-AE8B-67DC6A24BBB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF70094-75A9-4F6E-AE8B-67DC6A24BBB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF70094-75A9-4F6E-AE8B-67DC6A24BBB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF70094-75A9-4F6E-AE8B-67DC6A24BBB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B56509A-BA25-494E-88D3-F8F790CBB361}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B56509A-BA25-494E-88D3-F8F790CBB361}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B56509A-BA25-494E-88D3-F8F790CBB361}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B56509A-BA25-494E-88D3-F8F790CBB361}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D1B6DBA-7E40-4A80-9051-224E33F9AE01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D1B6DBA-7E40-4A80-9051-224E33F9AE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D1B6DBA-7E40-4A80-9051-224E33F9AE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D1B6DBA-7E40-4A80-9051-224E33F9AE01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
