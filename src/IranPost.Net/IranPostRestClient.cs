@@ -22,10 +22,13 @@ namespace IranPost.Net
 
         public AuthInfo AuthInfo { get; }
 
+        public IRetryHandler RetryHandler { get; }
+        
 
         public IranPostRestClient(
             HttpClient httpClient,
-            AuthInfo authInfo
+            AuthInfo authInfo,
+            IRetryHandler retryHandler
         )
         {
             if (httpClient is null) throw new ArgumentNullException(nameof(httpClient));
@@ -37,6 +40,7 @@ namespace IranPost.Net
             
             HttpClient = httpClient;
             AuthInfo = authInfo;
+            RetryHandler = retryHandler;
         }
 
         

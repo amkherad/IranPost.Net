@@ -16,6 +16,13 @@ namespace IranPost.Net
 {
     public class IranPostSoapClient : IIranPostClient
     {
+        public IranPostSoapClient(
+            AuthInfo authInfo,
+            IRetryHandler retryHandler
+        )
+        {
+        }
+
         public Task<BaseResponseDto<GetPriceResponseDto>> GetPrice(
             GetPriceRequestDto request,
             CancellationToken cancellationToken
