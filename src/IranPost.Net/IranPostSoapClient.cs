@@ -21,6 +21,7 @@ namespace IranPost.Net
             IRetryHandler retryHandler
         )
         {
+            
         }
 
         public Task<BaseResponseDto<GetPriceResponseDto>> GetPrice(
@@ -57,6 +58,14 @@ namespace IranPost.Net
 
         public Task<BaseResponseDto<GetStatusResponseDto>> GetStatus(
             GetStatusRequestDto request,
+            CancellationToken cancellationToken
+        )
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<BaseResponseDto<GetStatusResponseDto[]>> GetStatus(
+            GetStatusRequestDto[] request,
             CancellationToken cancellationToken
         )
         {

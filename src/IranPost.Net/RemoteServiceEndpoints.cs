@@ -12,7 +12,7 @@ namespace IranPost.Net
         
         public string ChangeStatusUrl { get; set; }
         
-        public string GetStatusUrl { get; set; }
+        public string PingUrl { get; set; }
         
         public string DayPingUrl { get; set; }
         

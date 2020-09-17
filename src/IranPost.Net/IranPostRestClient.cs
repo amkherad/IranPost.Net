@@ -26,7 +26,6 @@ namespace IranPost.Net
         private const string NewOrder2Url = "NewOrder2.asp";
         private const string ChangeStatusUrl = "Change.asp";
         private const string EditOrderUrl = "Edit.asp";
-        private const string GetStatusUrl = "GetStatus.asp";
         private const string DayPingUrl = "DayPing.asp";
         private const string BillingUrl = "Billing.asp";
         private const string Billing2Url = "Billing2.asp";
@@ -149,7 +148,7 @@ namespace IranPost.Net
                 };
             }
 
-            
+
             var path = Endpoints.GetPriceRelativeUrl ?? GetPriceUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -330,9 +329,13 @@ namespace IranPost.Net
         )
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
+            if (request.InvoiceNumbers is null) throw new ArgumentException(nameof(request));
 
 
-            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+            foreach (var invoice in request.InvoiceNumbers)
+            {
+                IranPostHelpers.ValidateInvoiceNumber(invoice);
+            }
 
 
             var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
@@ -352,7 +355,7 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            {"Id", request.Id},
+                            {"Id", string.Join(',', request.InvoiceNumbers)},
                             {"Status", (int) request.Status}
                         },
                         cancellationToken
@@ -386,13 +389,31 @@ namespace IranPost.Net
             CancellationToken cancellationToken
         )
         {
+            var result = await GetStatus(new[] {request}, cancellationToken);
+            
+            return new BaseResponseDto<GetStatusResponseDto>
+            {
+                Error = result.Error,
+                Success = result.Success,
+                Result = result.Result?[0]
+            };
+        }
+
+        public virtual async Task<BaseResponseDto<GetStatusResponseDto[]>> GetStatus(
+            GetStatusRequestDto[] request,
+            CancellationToken cancellationToken
+        )
+        {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
 
-            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+            foreach (var rq in request)
+            {
+                IranPostHelpers.ValidateInvoiceNumber(rq.Id);
+            }
 
 
-            var path = Endpoints.GetStatusUrl ?? GetStatusUrl;
+            var path = Endpoints.PingUrl ?? PingUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -409,14 +430,14 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            {"Id", request.Id},
+                            {"Id", string.Join(',', request.Select(rq => rq.Id))},
                         },
                         cancellationToken
                     );
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        return await ThrowOnInvalidStatusCode<GetStatusResponseDto>(response);
+                        return await ThrowOnInvalidStatusCode<GetStatusResponseDto[]>(response);
                     }
 
                     await RetryHandler.EndTry(retryContext, cancellationToken);

@@ -23,7 +23,7 @@ namespace IranPost.Net
         private static readonly Regex MatchIranianPostalCode =
             new Regex(@"^(\d{5}-?\d{5})$", options: RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        
+
         public static string JoinUrls(
             string left,
             string right
@@ -67,7 +67,6 @@ namespace IranPost.Net
             return invoiceNumber.All(char.IsNumber);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ValidateInvoiceNumber(
             string invoiceNumber
         )
@@ -80,8 +79,7 @@ namespace IranPost.Net
                 };
             }
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+
         public static void ValidateWeight(
             int weight
         )
@@ -95,7 +93,6 @@ namespace IranPost.Net
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ValidateProductPrice(
             int productPrice
         )
@@ -134,7 +131,6 @@ namespace IranPost.Net
             }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AssertNotNull(
             string fieldName,
             string value
@@ -168,11 +164,13 @@ namespace IranPost.Net
                 case PostErrors.NetworkError: return "خطا در سطح شبکه رخ داده است.";
                 case PostErrors.UnableToChangeState: return "امکان تغییر وضعیت این سفارش وجود ندارد.";
                 case PostErrors.InvalidPostalCode: return "کد پستی وارد شده معتبر نمیباشد.";
-                case PostErrors.InvalidAuthInfo: return "خطا در اطلاعات شناسایی ( نام کاربري ، Password Api ( و یا Ip سرور.";
+                case PostErrors.InvalidAuthInfo:
+                    return "خطا در اطلاعات شناسایی ( نام کاربري ، Password Api ( و یا Ip سرور.";
                 case PostErrors.InvalidShCode: return "خطا در شناسایی نام کاربري فروشنده";
                 case PostErrors.MerchantExpiredOrBlocked: return "فروشنده مورد نظر منقضی و یا مسدود شده است.";
                 case PostErrors.OrderIdNotFound: return "درخواست / شناسه مورد نظر یافت نشد.";
-                case PostErrors.ForbiddenDeliveryType: return "امکان استفاده از این سرویس ارسال براي این فروشگاه امکان پذیر نمیباشد.";
+                case PostErrors.ForbiddenDeliveryType:
+                    return "امکان استفاده از این سرویس ارسال براي این فروشگاه امکان پذیر نمیباشد.";
                 case PostErrors.InvalidCityIdOrStateId: return "خطا در شناسایی کد استان / شهرستان ارسال شده.";
                 case PostErrors.UnableToSendToDestination: return "امکان ارسال مرسوله براي این مقصد میسر نمیباشد.";
                 case PostErrors.OrderIdIsDuplicate: return "شناسه سفارش ارسال شده توسط شما تکراري میباشد.";
@@ -221,7 +219,7 @@ namespace IranPost.Net
                 Price = price
             };
         }
-        
+
         public static BaseResponseDto<NewOrder2ResponseDto> ParseNewOrder2Response(
             string responseText
         )
@@ -235,50 +233,167 @@ namespace IranPost.Net
                 return new BaseResponseDto<NewOrder2ResponseDto>
                 {
                     Success = false,
-                    Error = (PostErrors)errorCodeInt
+                    Error = (PostErrors) errorCodeInt
                 };
             }
 
+            var invoiceNumber = parts[1];
             var originalTrackingCode = parts[2];
 
             return new BaseResponseDto<NewOrder2ResponseDto>
             {
-                Success = parts[1].Length >= 20,
+                Success = IsValidInvoiceNumber(invoiceNumber),
                 Result = new NewOrder2ResponseDto
                 {
-                    PostInvoiceNumber = parts[1],
+                    PostInvoiceNumber = invoiceNumber,
                     OrderId = originalTrackingCode,
                 }
             };
-        }
-
-        
-        public static BaseResponseDto<DayPingResponseDto[]> ParseDayPingResponse(
-            string responseText
-        )
-        {
-            throw new NotImplementedException();
         }
 
         public static BaseResponseDto<EditOrderResponseDto> ParseEditOrderResponse(
             string responseText
         )
         {
-            throw new NotImplementedException();
+            var parts = responseText.Split(';');
+
+            if (parts.Length != 4)
+            {
+                return new BaseResponseDto<EditOrderResponseDto>
+                {
+                    Success = false,
+                    Error = PostErrors.NoError,
+                };
+            }
+
+            var invoiceNumber = parts[0];
+
+            if (!IsValidInvoiceNumber(invoiceNumber))
+            {
+                return new BaseResponseDto<EditOrderResponseDto>
+                {
+                    Success = false
+                };
+            }
+
+            long.TryParse(parts[0], out var price);
+            long.TryParse(parts[1], out var priceNoInPlacePayment);
+            long.TryParse(parts[2], out var tax);
+
+            if (priceNoInPlacePayment == 0 && tax == 0)
+            {
+                return new BaseResponseDto<EditOrderResponseDto>
+                {
+                    Success = false,
+                    Error = (PostErrors) price
+                };
+            }
+
+            return new EditOrderResponseDto
+            {
+                InvoiceNumber = invoiceNumber,
+
+                PriceWithoutCod = priceNoInPlacePayment,
+                Tax = tax,
+                Price = price
+            };
         }
 
         public static BaseResponseDto<ChangeStatusResponseDto> ParseChangeStatusResponse(
             string responseText
         )
         {
-            throw new NotImplementedException();
+            if (responseText == "0")
+            {
+                return new BaseResponseDto<ChangeStatusResponseDto>
+                {
+                    Success = true,
+                    
+                };
+            }
+            
+            return new BaseResponseDto<ChangeStatusResponseDto>
+            {
+                Success = false
+            };
         }
 
-        public static BaseResponseDto<GetStatusResponseDto> ParseGetStatusResponse(
+        public static BaseResponseDto<GetStatusResponseDto[]> ParseGetStatusResponse(
             string responseText
         )
         {
-            throw new NotImplementedException();
+            GetStatusResponseDto ParseRow(
+                string row
+            )
+            {
+                var parts = responseText.Split(';');
+
+                if (parts.Length != 3)
+                {
+                    return null;
+                }
+
+                var latestStatus =(OrderStates) Enum.Parse(typeof(OrderStates), parts[0]);
+                var latestStatusDatetime = DateTimeOffset.Parse(parts[1]);
+                var invoiceNumber = parts[2];
+                
+                return new GetStatusResponseDto
+                {
+                    Id = invoiceNumber,
+                    LatestStatus = latestStatus,
+                    LatestStatusDateTime = latestStatusDatetime
+                };
+            }
+
+            var rows = responseText.Split('-');
+            var parsedRows = rows.Select(ParseRow).ToArray();
+
+            return new BaseResponseDto<GetStatusResponseDto[]>
+            {
+                Success = parsedRows.All(r => !(r is null)),
+                
+                Result = parsedRows
+            };
+        }
+
+
+        public static BaseResponseDto<DayPingResponseDto[]> ParseDayPingResponse(
+            string responseText
+        )
+        {
+            DayPingResponseDto ParseRow(
+                string row
+            )
+            {
+                var parts = row.Split('^');
+
+                if (parts.Length != 7)
+                {
+                    return null;
+                }
+
+                var uniqueId = parts[0];
+                var statusDateTime = parts[1];
+                var invoiceNumber = parts[2];
+                var orderId = parts[3];
+                var status = parts[4];
+                var settlementCode = parts[5];
+                var price = parts[6];
+                
+                return new DayPingResponseDto
+                {
+                    
+                };
+            }
+
+            var rows = responseText.Split(';');
+            var parsedRows = rows.Select(ParseRow).ToArray();
+
+            return new BaseResponseDto<DayPingResponseDto[]>
+            {
+                Success = parsedRows.All(r => !(r is null)),
+                Result = parsedRows
+            };
         }
 
         public static BaseResponseDto<BillingResponseDto> ParseBillingResponse(
