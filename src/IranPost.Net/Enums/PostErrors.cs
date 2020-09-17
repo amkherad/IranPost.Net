@@ -1,8 +1,9 @@
 namespace IranPost.Net.Enums
 {
-    public enum PostErrors
+    public enum PostErrors : int
     {
         NoError = 0,
+        NetworkError = 10000,
         BadRequest = 1,
         UnableToChangeState = 3,
         InvalidPostalCode = 101,

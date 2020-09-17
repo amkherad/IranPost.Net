@@ -16,8 +16,9 @@ namespace IranPost.Net.AspNet
         public string Password { get; set; }
         
         public Func<IServiceProvider, HttpClient> HttpClientFactory { get; set; }
-        
-        
+        public Uri RemoteServiceUri { get; set; }
+
+
         public RetryBuilder AddRetry()
         {
             RetryBuilder = new RetryBuilder();

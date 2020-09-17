@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace IranPost.Net
 {
@@ -11,6 +12,22 @@ namespace IranPost.Net
         public IranPostException(
             string message
         ) : base(message)
+        {
+        }
+        
+        public IranPostException(
+            string message,
+            Exception innerException
+        )
+            : base(message, innerException)
+        {
+        }
+        
+        protected IranPostException(
+            SerializationInfo info,
+            StreamingContext context
+        )
+            : base(info, context)
         {
         }
     }

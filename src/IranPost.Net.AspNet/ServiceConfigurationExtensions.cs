@@ -49,6 +49,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 case IranPostConnectionProtocol.Http:
                 {
                     return new IranPostRestClient(
+                        config.RemoteServiceUri ?? new Uri("http://gateway.post.ir/Gateway/"),
                         httpClient,
                         new AuthInfo
                         {
