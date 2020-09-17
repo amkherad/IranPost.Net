@@ -63,7 +63,7 @@ namespace IranPost.Net
             throw new System.NotImplementedException();
         }
 
-        public Task<BaseResponseDto<DayPingResponseDto>> DayPing(
+        public Task<BaseResponseDto<DayPingResponseDto[]>> DayPing(
             DayPingRequestDto request,
             CancellationToken cancellationToken
         )

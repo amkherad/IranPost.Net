@@ -41,7 +41,7 @@ namespace IranPost.Net
             CancellationToken cancellationToken
         );
 
-        Task<BaseResponseDto<DayPingResponseDto>> DayPing(
+        Task<BaseResponseDto<DayPingResponseDto[]>> DayPing(
             DayPingRequestDto request,
             CancellationToken cancellationToken
         );

@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using IranPost.Net.Dto;
 using IranPost.Net.Dto.Billing;
 using IranPost.Net.Dto.Billing2;
@@ -12,11 +14,16 @@ using IranPost.Net.Dto.NewOrder2;
 using IranPost.Net.Dto.RejectExp;
 using IranPost.Net.Dto.RejectId;
 using IranPost.Net.Enums;
+using IranPost.Net.PersianDateTime;
 
 namespace IranPost.Net
 {
     public static class IranPostHelpers
     {
+        private static readonly Regex MatchIranianPostalCode =
+            new Regex(@"^(\d{5}-?\d{5})$", options: RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        
         public static string JoinUrls(
             string left,
             string right
@@ -41,6 +48,114 @@ namespace IranPost.Net
             }
 
             return left + '/' + right;
+        }
+
+        public static bool IsValidInvoiceNumber(
+            string invoiceNumber
+        )
+        {
+            if (string.IsNullOrWhiteSpace(invoiceNumber))
+            {
+                return false;
+            }
+
+            if (invoiceNumber.Length != 20)
+            {
+                return false;
+            }
+
+            return invoiceNumber.All(char.IsNumber);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ValidateInvoiceNumber(
+            string invoiceNumber
+        )
+        {
+            if (!IsValidInvoiceNumber(invoiceNumber))
+            {
+                throw new IranPostException($"Invalid invoice number. invoice was: '{invoiceNumber}'")
+                {
+                    Type = IranPostException.ExceptionType.ValidationInvoiceNumber
+                };
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ValidateWeight(
+            int weight
+        )
+        {
+            if (weight < 500)
+            {
+                throw new IranPostException($"The minimum value for weight is 500g.")
+                {
+                    Type = IranPostException.ExceptionType.ValidationWeight
+                };
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ValidateProductPrice(
+            int productPrice
+        )
+        {
+            if (productPrice < 50000)
+            {
+                throw new IranPostException($"The minimum value for productPrice is 50000.")
+                {
+                    Type = IranPostException.ExceptionType.ValidationProductPrice
+                };
+            }
+        }
+
+        public static bool IsValidPostalCode(
+            string postalCode
+        )
+        {
+            if (string.IsNullOrWhiteSpace(postalCode))
+            {
+                return false;
+            }
+
+            return MatchIranianPostalCode.IsMatch(postalCode);
+        }
+
+        public static void ValidatePostalCode(
+            string postalCode
+        )
+        {
+            if (!IsValidPostalCode(postalCode))
+            {
+                throw new IranPostException($"Invalid postal code is given. postal-code: '{postalCode}'")
+                {
+                    Type = IranPostException.ExceptionType.ValidationPostalCode
+                };
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AssertNotNull(
+            string fieldName,
+            string value
+        )
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new IranPostException($"{fieldName} should not be empty or whitespace.")
+                {
+                    Type = IranPostException.ExceptionType.ValidationEmpty
+                };
+            }
+        }
+
+        public static string FormatDate(
+            DateTimeOffset dateTimeOffset
+        )
+        {
+            var persianDateTime = dateTimeOffset.ToPersianDateTime();
+
+            return persianDateTime.ToString("");
         }
 
         public static string GetPostErrorMessage(
@@ -137,14 +252,15 @@ namespace IranPost.Net
             };
         }
 
-        public static BaseResponseDto<EditOrderResponseDto> ParseChangeResponse(
+        
+        public static BaseResponseDto<DayPingResponseDto[]> ParseDayPingResponse(
             string responseText
         )
         {
             throw new NotImplementedException();
         }
 
-        public static BaseResponseDto<DayPingResponseDto> ParseDayPingResponse(
+        public static BaseResponseDto<EditOrderResponseDto> ParseEditOrderResponse(
             string responseText
         )
         {

@@ -5,6 +5,17 @@ namespace IranPost.Net
 {
     public class IranPostException : Exception
     {
+        public enum ExceptionType
+        {
+            ValidationPostalCode,
+            ValidationWeight,
+            ValidationProductPrice,
+            ValidationInvoiceNumber,
+            ValidationEmpty,
+        }
+        
+        public ExceptionType Type { get; set; }
+        
         public IranPostException() : base("An error occurred in IranPost API call.")
         {
         }

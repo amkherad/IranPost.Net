@@ -130,6 +130,26 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
+            IranPostHelpers.ValidateWeight(request.Weight);
+            IranPostHelpers.ValidateProductPrice(request.Price);
+            IranPostHelpers.AssertNotNull("Shcode", request.Shcode);
+            if (request.StateId == 0)
+            {
+                throw new IranPostException("StateId is zero.")
+                {
+                    Type = IranPostException.ExceptionType.ValidationEmpty
+                };
+            }
+
+            if (request.CityId == 0)
+            {
+                throw new IranPostException("CityId is zero.")
+                {
+                    Type = IranPostException.ExceptionType.ValidationEmpty
+                };
+            }
+
+            
             var path = Endpoints.GetPriceRelativeUrl ?? GetPriceUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -242,6 +262,13 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
+
+            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+            IranPostHelpers.ValidateWeight(request.Weight);
+            IranPostHelpers.ValidateProductPrice(request.Price);
+            IranPostHelpers.ValidatePostalCode(request.PostalCode);
+
+
             var path = Endpoints.EditOrderUrl ?? EditOrderUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -259,6 +286,17 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Id", request.Id},
+                            {"Pname", string.Join('-', request.ProductNames)},
+                            {"Weight", request.Weight},
+                            {"Cod", (int) request.PaymentType},
+                            {"Price", request.Price},
+                            {"Name", request.Name},
+                            {"Address", request.Address},
+                            {"Email", request.Email},
+                            {"Tel", request.Tel},
+                            {"Pcode", request.PostalCode},
+                            {"Showtype", 1},
                         },
                         cancellationToken
                     );
@@ -283,7 +321,7 @@ namespace IranPost.Net
 
             var responseText = await response.Content.ReadAsStringAsync();
 
-            return IranPostHelpers.ParseChangeResponse(responseText);
+            return IranPostHelpers.ParseEditOrderResponse(responseText);
         }
 
         public virtual async Task<BaseResponseDto<ChangeStatusResponseDto>> ChangeStatus(
@@ -292,6 +330,10 @@ namespace IranPost.Net
         )
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
+
+
+            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+
 
             var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
 
@@ -310,6 +352,8 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Id", request.Id},
+                            {"Status", (int) request.Status}
                         },
                         cancellationToken
                     );
@@ -344,6 +388,10 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
+
+            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+
+
             var path = Endpoints.GetStatusUrl ?? GetStatusUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -361,6 +409,7 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Id", request.Id},
                         },
                         cancellationToken
                     );
@@ -388,7 +437,7 @@ namespace IranPost.Net
             return IranPostHelpers.ParseGetStatusResponse(responseText);
         }
 
-        public virtual async Task<BaseResponseDto<DayPingResponseDto>> DayPing(
+        public virtual async Task<BaseResponseDto<DayPingResponseDto[]>> DayPing(
             DayPingRequestDto request,
             CancellationToken cancellationToken
         )
@@ -412,13 +461,16 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Changedate", IranPostHelpers.FormatDate(request.ChangeDate)},
+                            {"Lid", request.LastId},
+                            {"Number", request.Number},
                         },
                         cancellationToken
                     );
 
                     if (!response.IsSuccessStatusCode)
                     {
-                        return await ThrowOnInvalidStatusCode<DayPingResponseDto>(response);
+                        return await ThrowOnInvalidStatusCode<DayPingResponseDto[]>(response);
                     }
 
                     await RetryHandler.EndTry(retryContext, cancellationToken);
@@ -463,6 +515,8 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Min", IranPostHelpers.FormatDate(request.Min)},
+                            {"Max", IranPostHelpers.FormatDate(request.Max)},
                         },
                         cancellationToken
                     );
@@ -497,6 +551,10 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
+
+            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+
+
             var path = Endpoints.Billing2Url ?? Billing2Url;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -514,6 +572,9 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Id", request.Id},
+                            {"Tip", (int) request.Tip},
+                            {"Page", request.Page},
                         },
                         cancellationToken
                     );
@@ -548,6 +609,10 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
+
+            IranPostHelpers.ValidateInvoiceNumber(request.Id);
+
+
             var path = Endpoints.RejectExpUrl ?? RejectExpUrl;
 
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
@@ -565,6 +630,7 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
+                            {"Id", request.Id}
                         },
                         cancellationToken
                     );
