@@ -7,7 +7,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceConfigurationExtensions
     {
-        public static void AddAlopeyk(
+        public static void AddIranPost(
             this IServiceCollection serviceCollection,
             Action<IranPostConfiguration> config
         )

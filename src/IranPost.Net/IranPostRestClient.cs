@@ -90,25 +90,13 @@ namespace IranPost.Net
             HttpResponseMessage response
         )
         {
-            // try
-            // {
-                //var responseText = await response.Content.ReadAsStringAsync();
-
-                return new BaseResponseDto<T>
-                {
-                    Error = PostErrors.NetworkError,
-                    Success = false
-                };
-            // }
-            // catch (Exception ex)
-            // {
-            //     throw new IranPostException(
-            //         $"Alopeyk remote service returned an invalid http status code, statusCode: {response.StatusCode}",
-            //         ex
-            //     );
-            // }
+            return new BaseResponseDto<T>
+            {
+                Error = PostErrors.NetworkError,
+                Success = false
+            };
         }
-        
+
 
         protected virtual Task<HttpResponseMessage> Send(
             string uri,
@@ -164,8 +152,8 @@ namespace IranPost.Net
                             {"Shcode", request.Shcode},
                             {"State", request.StateId},
                             {"City", request.CityId},
-                            {"Tip", (int)request.Tip},
-                            {"Cod", (int)request.PaymentType},
+                            {"Tip", (int) request.Tip},
+                            {"Cod", (int) request.PaymentType},
                             {"Showtype", 1},
                         },
                         cancellationToken
@@ -202,7 +190,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.NewOrder2Url ?? NewOrder2Url;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -218,7 +206,7 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            {"OrderTip", (int)request.OrderTip},
+                            {"OrderTip", (int) request.OrderTip},
                             {"Det", request.Det.DetString},
                         },
                         cancellationToken
@@ -255,7 +243,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.EditOrderUrl ?? EditOrderUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -271,7 +259,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -307,7 +294,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -323,7 +310,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -359,7 +345,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.GetStatusUrl ?? GetStatusUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -375,7 +361,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -411,7 +396,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.DayPingUrl ?? DayPingUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -427,7 +412,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -463,7 +447,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.BillingUrl ?? BillingUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -479,7 +463,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -515,7 +498,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.Billing2Url ?? Billing2Url;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -531,7 +514,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -567,7 +549,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.RejectExpUrl ?? RejectExpUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -583,7 +565,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
@@ -619,7 +600,7 @@ namespace IranPost.Net
             if (request is null) throw new ArgumentNullException(nameof(request));
 
             var path = Endpoints.RejectIdUrl ?? RejectIdUrl;
-            
+
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
             HttpResponseMessage response = null;
@@ -635,7 +616,6 @@ namespace IranPost.Net
                         path,
                         new Dictionary<string, object>
                         {
-                            
                         },
                         cancellationToken
                     );
