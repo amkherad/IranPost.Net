@@ -50,29 +50,30 @@ namespace IranPost.Net
             switch (errorNumber)
             {
                 case PostErrors.BadRequest: return "اطلاعات درخواستی ناقص میباشد.";
-                case 3: return "امکان تغییر وضعیت این سفارش وجود ندارد.";
-                case 101: return "کد پستی وارد شده معتبر نمیباشد.";
-                case 401: return "خطا در اطلاعات شناسایی ( نام کاربري ، Password Api ( و یا Ip سرور.";
-                case 402: return "خطا در شناسایی نام کاربري فروشنده";
-                case 403: return "فروشنده مورد نظر منقضی و یا مسدود شده است.";
-                case 404: return "درخواست / شناسه مورد نظر یافت نشد.";
-                case 405: return "امکان استفاده از این سرویس ارسال براي این فروشگاه امکان پذیر نمیباشد.";
-                case 502: return "خطا در شناسایی کد استان / شهرستان ارسال شده.";
-                case 503: return "امکان ارسال مرسوله براي این مقصد میسر نمیباشد.";
-                case 505: return "شناسه سفارش ارسال شده توسط شما تکراري میباشد.";
-                case 600: return "این درخواست قبلا ثبت شده است.";
-                case 601: return "تغییر وضعیتی براي نمایش وجود ندارد.";
-                case 800: return "String تولید شده براي ثبت سفارش معتبر نمیباشد.";
-                case 801: return "تعداد سفارش ارسالی بیشتر از حد مجاز میباشد. ( متد Order New (";
-                case 802: return "روش ارسال / سرویس درخواستی نامعتبر میباشد.";
-                case 803: return "روش پرداخت درخواستی نامعتبر میباشد.";
-                case 804: return "پارامترهاي الزامی به سامانه ارسال نگردیده است.";
-                case 805: return "وزن ارسال شده نامعتبر میباشد.";
-                case 806: return "قیمت ارسال شده براي سفارش نامعتبر میباشد.";
-                case 807: return "هزینه ارسال ارسال شده نامعتبر میباشد.";
-                case 808: return "مالیات بر ارزش افزوده ارسال شده نامعتبر میباشد.";
-                case 900: return "تعداد سفارش ارسالی بیشتر از حد مجاز میباشد.";
-                case 5000: return "حداقل مبلغ سفارش باید ۵۰۰۰ هزار تومان باشد.";
+                case PostErrors.NetworkError: return "خطا در سطح شبکه رخ داده است.";
+                case PostErrors.UnableToChangeState: return "امکان تغییر وضعیت این سفارش وجود ندارد.";
+                case PostErrors.InvalidPostalCode: return "کد پستی وارد شده معتبر نمیباشد.";
+                case PostErrors.InvalidAuthInfo: return "خطا در اطلاعات شناسایی ( نام کاربري ، Password Api ( و یا Ip سرور.";
+                case PostErrors.InvalidShCode: return "خطا در شناسایی نام کاربري فروشنده";
+                case PostErrors.MerchantExpiredOrBlocked: return "فروشنده مورد نظر منقضی و یا مسدود شده است.";
+                case PostErrors.OrderIdNotFound: return "درخواست / شناسه مورد نظر یافت نشد.";
+                case PostErrors.ForbiddenDeliveryType: return "امکان استفاده از این سرویس ارسال براي این فروشگاه امکان پذیر نمیباشد.";
+                case PostErrors.InvalidCityIdOrStateId: return "خطا در شناسایی کد استان / شهرستان ارسال شده.";
+                case PostErrors.UnableToSendToDestination: return "امکان ارسال مرسوله براي این مقصد میسر نمیباشد.";
+                case PostErrors.OrderIdIsDuplicate: return "شناسه سفارش ارسال شده توسط شما تکراري میباشد.";
+                case PostErrors.RequestDuplicate: return "این درخواست قبلا ثبت شده است.";
+                case PostErrors.NoStateChangeToReport: return "تغییر وضعیتی براي نمایش وجود ندارد.";
+                case PostErrors.InvalidStringForOrder: return "String تولید شده براي ثبت سفارش معتبر نمیباشد.";
+                case PostErrors.NewOrderLimit: return "تعداد سفارش ارسالی بیشتر از حد مجاز میباشد. ( متد Order New (";
+                case PostErrors.InvalidDeliveryType: return "روش ارسال / سرویس درخواستی نامعتبر میباشد.";
+                case PostErrors.InvalidPaymentType: return "روش پرداخت درخواستی نامعتبر میباشد.";
+                case PostErrors.MissingParameters: return "پارامترهاي الزامی به سامانه ارسال نگردیده است.";
+                case PostErrors.InvalidWeight: return "وزن ارسال شده نامعتبر میباشد.";
+                case PostErrors.InvalidProductPrice: return "قیمت ارسال شده براي سفارش نامعتبر میباشد.";
+                case PostErrors.InvalidTransportPrice: return "هزینه ارسال ارسال شده نامعتبر میباشد.";
+                case PostErrors.InvalidTax: return "مالیات بر ارزش افزوده ارسال شده نامعتبر میباشد.";
+                case PostErrors.OrderLimit: return "تعداد سفارش ارسالی بیشتر از حد مجاز میباشد.";
+                case PostErrors.InvalidMinimumPrice: return "حداقل مبلغ سفارش باید ۵۰۰۰ هزار تومان باشد.";
                 default:
                     return "خطای ناشناخته سرویس پست.";
             }

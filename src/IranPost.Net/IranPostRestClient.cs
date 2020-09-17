@@ -26,6 +26,12 @@ namespace IranPost.Net
         private const string NewOrder2Url = "NewOrder2.asp";
         private const string ChangeStatusUrl = "Change.asp";
         private const string EditOrderUrl = "Edit.asp";
+        private const string GetStatusUrl = "GetStatus.asp";
+        private const string DayPingUrl = "DayPing.asp";
+        private const string BillingUrl = "Billing.asp";
+        private const string Billing2Url = "Billing2.asp";
+        private const string RejectExpUrl = "RejectExp.asp";
+        private const string RejectIdUrl = "RejectId.asp";
 
 
         public Uri RemoteServiceUri { get; }
@@ -352,7 +358,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.GetStatusUrl ?? GetStatusUrl;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -404,7 +410,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.DayPingUrl ?? DayPingUrl;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -456,7 +462,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.BillingUrl ?? BillingUrl;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -508,7 +514,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.Billing2Url ?? Billing2Url;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -560,7 +566,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.RejectExpUrl ?? RejectExpUrl;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 
@@ -612,7 +618,7 @@ namespace IranPost.Net
         {
             if (request is null) throw new ArgumentNullException(nameof(request));
 
-            var path = Endpoints.ChangeStatusUrl ?? ChangeStatusUrl;
+            var path = Endpoints.RejectIdUrl ?? RejectIdUrl;
             
             var retryContext = await RetryHandler.BeginTry(cancellationToken);
 

@@ -26,6 +26,7 @@ namespace IranPost.Net.Enums
         InvalidProductPrice = 806,
         InvalidTransportPrice = 807,
         InvalidTax = 808,
-        OrderLimit = 900
+        OrderLimit = 900,
+        InvalidMinimumPrice = 5000
     }
 }
